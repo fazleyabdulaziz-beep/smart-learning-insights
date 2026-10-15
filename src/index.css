@@ -1,0 +1,6 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+body{@apply bg-sand text-navy font-sans antialiased}
+.card{@apply bg-white rounded-2xl shadow-sm border border-slate-200/70 p-5}
+.btn{@apply inline-flex items-center justify-center gap-2 rounded-xl bg-teal text-white font-semibold px-4 py-2.5 hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy disabled:opacity-40}
+.btn2{@apply btn bg-white !text-navy border border-slate-300}
+.badge{@apply inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold}
