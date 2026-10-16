@@ -40,7 +40,7 @@ export function Provider({ children }: { children: ReactNode }) {
   const v: Ctx = { ...s, live, visibleStudents,
     signIn: async (email, pw) => {
       const { data, error } = await supabase!.auth.signInWithPassword({ email, password: pw })
-      if (error || !data.user) return { error: 'E-mel atau kata laluan tidak sepadan.' }
+      if (error || !data.user) return { error: 'E-mel atau kata laluan tidak sepadan. (' + (error?.message ?? 'tiada pengguna') + ')' }
       const r = await hydrate(data.user.id)
       return r ? { role: r } : { error: 'Akaun belum mempunyai profil. Hubungi pentadbir.' }
     },
