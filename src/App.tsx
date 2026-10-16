@@ -9,15 +9,16 @@ import { TeacherHome, TeacherStudent } from './pages/Teacher'
 import { StudentHome, Run, Results } from './pages/Student'
 
 function Shell({ role }: { role?: Role }) {
-  const { session, logout, reset } = useApp(); const nav = useNavigate()
+  const { session, logout, reset, live, ready } = useApp(); const nav = useNavigate()
+  if (role && !ready) return <p className="p-10 text-center">Memuatkan...</p>
   if (role && session?.role !== role) return <Navigate to="/login" replace />
   return <div className="min-h-screen">
     <header className="bg-white border-b border-slate-200"><div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
       <Link to="/" className="font-extrabold text-lg">{site.name}</Link>
-      {role && <span className="badge bg-amber-soft text-amber-800">Data contoh / demo</span>}
+      {role && <span className="badge bg-amber-soft text-amber-800">{live ? 'Data langsung (Supabase)' : 'Data contoh / demo'}</span>}
       <div className="ml-auto flex gap-2">
         {role && <Link className="btn2" to={'/' + role}>Utama</Link>}
-        {role && <button className="btn2" onClick={() => { if (confirm('Set semula semua data demo?')) reset() }}><RotateCcw size={16} />Set semula</button>}
+        {role && !live && <button className="btn2" onClick={() => { if (confirm('Set semula semua data demo?')) reset() }}><RotateCcw size={16} />Set semula</button>}
         {session ? <button className="btn2" aria-label="Log keluar" onClick={() => { logout(); nav('/') }}><LogOut size={16} />Keluar</button> : <Link className="btn" to="/login">Log masuk demo</Link>}
       </div></div></header>
     <main className="max-w-6xl mx-auto px-4 py-6"><Outlet /></main>

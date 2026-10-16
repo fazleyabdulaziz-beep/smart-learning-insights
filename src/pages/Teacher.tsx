@@ -5,11 +5,10 @@ import { useApp } from '../store'
 import { Recs, SkillTable } from './shared'
 
 export function TeacherHome() {
-  const { students, attempts } = useApp(); const cls = classes[0]
-  const kids = students.filter(s => relationships.some(r => r.classId === cls.id && r.studentId === s.id))
+  const { visibleStudents: kids, attempts, live } = useApp(); const cls = classes[0]
   const agg = skills.map(k => { let c = 0, n = 0; kids.forEach(s => skillStats(attempts, s.id).filter(x => x.skillId === k.id).forEach(x => { c += x.correct; n += x.answered })); return { k, c, n } }).filter(x => x.n)
   return <div className="space-y-5"><h1 className="text-2xl font-extrabold">Papan pemuka guru</h1>
-    <div className="card"><h2 className="font-bold">{cls.name}</h2><p className="text-sm text-slate-500">{kids.length} murid (rekod contoh)</p>
+    <div className="card"><h2 className="font-bold">{live ? 'Kelas saya' : cls.name}</h2><p className="text-sm text-slate-500">{kids.length} murid (rekod contoh)</p>
       <div className="mt-3 flex gap-2 flex-wrap">{kids.map(s => <Link key={s.id} className="btn2" to={'/teacher/students/' + s.id}>{s.avatar} {s.name}</Link>)}</div></div>
     <div className="card"><h2 className="font-bold mb-3">Kemahiran kelas yang perlu perhatian</h2>{agg.map(({ k, c, n }) => {
       const pct = Math.round(100 * c / n); const s = n < 3 ? 'insufficient' : pct < 50 ? 'developing' : pct >= 80 ? 'consistent' : 'building'

@@ -21,22 +21,25 @@ export function Landing() {
       <p className="font-semibold">Adakah data ini sebenar?</p><p className="text-slate-600">Tidak. Semua rekod terlebih dahulu ialah data contoh fiksyen.</p></section></div>
 }
 export function Login() {
-  const { login } = useApp(); const nav = useNavigate()
-  const [role, setRole] = useState<Role>('parent'); const [email, setEmail] = useState(''); const [pw, setPw] = useState(''); const [show, setShow] = useState(false); const [err, setErr] = useState('')
+  const { login, signIn, live } = useApp(); const nav = useNavigate()
+  const [role, setRole] = useState<Role>('parent'); const [email, setEmail] = useState(''); const [pw, setPw] = useState(''); const [show, setShow] = useState(false); const [err, setErr] = useState(''); const [busy, setBusy] = useState(false)
   const pick = (r: Role) => { setRole(r); setErr(''); setEmail(r === 'parent' ? 'parent@example.com' : r === 'teacher' ? 'teacher@example.com' : ''); setPw(r === 'student' ? '' : DEMO_PASSWORD) }
-  const submit = (e: FormEvent) => { e.preventDefault()
+  const submit = async (e: FormEvent) => { e.preventDefault()
+    if (live) { if (!email.trim() || !pw) return setErr('Sila isi e-mel dan kata laluan.')
+      setBusy(true); const r = await signIn(email.trim(), pw); setBusy(false); return r.error ? setErr(r.error) : nav('/' + r.role) }
     if (role === 'student') { login('student', 'Aisyah'); return nav('/student') }
     if (!email.trim() || !pw) return setErr('Sila isi e-mel dan kata laluan.')
     const u = users.find(x => x.email === email.trim().toLowerCase() && x.role === role)
     if (!u || pw !== DEMO_PASSWORD) return setErr('E-mel atau kata laluan demo tidak sepadan.')
     login(role, u.name); nav('/' + role) }
-  return <form onSubmit={submit} className="card max-w-md mx-auto space-y-4"><h1 className="text-2xl font-extrabold">Log masuk demo</h1>
-    <div className="flex gap-2" role="radiogroup">{(['parent', 'teacher', 'student'] as Role[]).map(r => <button type="button" key={r} onClick={() => pick(r)} className={r === role ? 'btn flex-1' : 'btn2 flex-1'}>{r === 'parent' ? 'Ibu bapa' : r === 'teacher' ? 'Guru' : 'Murid'}</button>)}</div>
-    {role === 'student' ? <p className="text-sm text-slate-600">Masuk sebagai profil murid demo (Aisyah, Darjah 2).</p> : <>
+  const needsFields = live || role !== 'student'
+  return <form onSubmit={submit} className="card max-w-md mx-auto space-y-4"><h1 className="text-2xl font-extrabold">{live ? 'Log masuk' : 'Log masuk demo'}</h1>
+    {!live && <div className="flex gap-2" role="radiogroup">{(['parent', 'teacher', 'student'] as Role[]).map(r => <button type="button" key={r} onClick={() => pick(r)} className={r === role ? 'btn flex-1' : 'btn2 flex-1'}>{r === 'parent' ? 'Ibu bapa' : r === 'teacher' ? 'Guru' : 'Murid'}</button>)}</div>}
+    {!needsFields ? <p className="text-sm text-slate-600">Masuk sebagai profil murid demo (Aisyah, Darjah 2).</p> : <>
       <label className="block text-sm font-semibold">E-mel<input className="mt-1 w-full border rounded-xl px-3 py-2" value={email} onChange={e => setEmail(e.target.value)} /></label>
       <label className="block text-sm font-semibold">Kata laluan<div className="mt-1 flex border rounded-xl"><input className="flex-1 px-3 py-2 rounded-xl" type={show ? 'text' : 'password'} value={pw} onChange={e => setPw(e.target.value)} />
         <button type="button" className="px-3" aria-label="Tunjuk/sembunyi kata laluan" onClick={() => setShow(!show)}>{show ? <EyeOff size={18} /> : <Eye size={18} />}</button></div></label></>}
     {err && <p role="alert" className="text-sm text-red-700">{err}</p>}
-    <button className="btn w-full">Log masuk</button>
-    <p className="text-xs text-slate-500">Demo: parent@example.com / teacher@example.com, kata laluan {DEMO_PASSWORD}. Ini bukan pengesahan sebenar dan pilihan peranan bukan kawalan keselamatan.</p></form>
+    <button className="btn w-full" disabled={busy}>{busy ? 'Sila tunggu...' : 'Log masuk'}</button>
+    <p className="text-xs text-slate-500">{live ? 'Log masuk dengan akaun Supabase anda. Gunakan data fiksyen sahaja sehingga persetujuan penjaga dan semakan pematuhan selesai.' : `Demo: parent@example.com / teacher@example.com, kata laluan ${DEMO_PASSWORD}. Bukan pengesahan sebenar.`}</p></form>
 }

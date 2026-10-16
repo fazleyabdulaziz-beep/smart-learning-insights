@@ -5,10 +5,10 @@ import { useApp } from '../store'
 import { Chart, Recs, SkillTable } from './shared'
 
 export function ParentHome() {
-  const { students, attempts, selected, select, editStudent } = useApp()
-  const kids = students.filter(s => relationships.some(r => r.userId === 'u1' && r.studentId === s.id))
+  const { visibleStudents: kids, attempts, selected, select, editStudent } = useApp()
   const kid = kids.find(k => k.id === selected) ?? kids[0]
-  const [name, setName] = useState(kid.name)
+  const [name, setName] = useState(kid?.name ?? '')
+  if (!kid) return <div className="card">Belum ada anak dipautkan pada akaun ini.</div>
   const mine = attempts.filter(a => a.studentId === kid.id).sort((a, b) => b.date.localeCompare(a.date))
   return <div className="space-y-5"><h1 className="text-2xl font-extrabold">Papan pemuka ibu bapa</h1>
     <div className="flex gap-2 flex-wrap">{kids.map(k => <button key={k.id} className={k.id === kid.id ? 'btn' : 'btn2'} onClick={() => { select(k.id); setName(k.name) }}>{k.avatar} {k.name} (Darjah {k.grade})</button>)}</div>

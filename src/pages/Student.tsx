@@ -5,7 +5,8 @@ import { recommend } from '../features/analytics'
 import { useApp } from '../store'
 
 export function StudentHome() {
-  const { students, attempts } = useApp(); const s = students.find(x => x.id === 's1')!
+  const { visibleStudents, attempts } = useApp(); const s = visibleStudents[0]
+  if (!s) return <div className="card">Belum ada profil murid dipautkan.</div>
   const recs = recommend(attempts, s.id).filter(r => r.activityId)
   const done = attempts.filter(a => a.studentId === s.id && !a.sample)
   const stars = done.reduce((n, a) => n + a.responses.filter(r => r.isCorrect).length, 0)
@@ -16,20 +17,19 @@ export function StudentHome() {
 }
 const shuffle = <T,>(a: T[]) => [...a].sort(() => Math.random() - 0.5)
 export function Run() {
-  const { mode, id } = useParams(); const { students, addAttempt } = useApp(); const nav = useNavigate(); const s = students.find(x => x.id === 's1')!
+  const { mode, id } = useParams(); const { visibleStudents, addAttempt } = useApp(); const nav = useNavigate(); const s = visibleStudents[0]
   const qs: Question[] = useMemo(() => {
-    const base = mode === 'practice' ? questions.filter(q => q.skillId === activities.find(a => a.id === id)?.skillId) : questions.filter(q => q.subjectId === id && q.grade === s.grade)
+    const base = mode === 'practice' ? questions.filter(q => q.skillId === activities.find(a => a.id === id)?.skillId) : questions.filter(q => q.subjectId === id && q.grade === s?.grade)
     return base.map(q => ({ ...q, options: shuffle(q.options) }))
-  }, [mode, id, s.grade])
+  }, [mode, id, s?.grade])
   const [i, setI] = useState(0); const [ans, setAns] = useState<Record<string, string>>({}); const [err, setErr] = useState('')
-  if (!qs.length) return <div className="card"><p>Belum ada soalan untuk Darjah {s.grade} di sini.</p><Link className="btn mt-3" to="/student">Kembali</Link></div>
+  if (!s || !qs.length) return <div className="card"><p>Belum ada soalan untuk murid ini di sini.</p><Link className="btn mt-3" to="/student">Kembali</Link></div>
   const q = qs[i]
-  const submit = () => {
+  const submit = async () => {
     if (qs.some(x => !ans[x.id])) return setErr('Sila jawab semua soalan sebelum hantar.')
-    const aid = 'n' + Date.now()
-    const a: Attempt = { id: aid, studentId: s.id, type: mode === 'practice' ? 'practice' : 'assessment', subjectId: qs[0].subjectId, skillId: mode === 'practice' ? qs[0].skillId : undefined, date: new Date().toISOString().slice(0, 10), sample: false,
+    const a: Attempt = { id: 'tmp', studentId: s.id, type: mode === 'practice' ? 'practice' : 'assessment', subjectId: qs[0].subjectId, skillId: mode === 'practice' ? qs[0].skillId : undefined, date: new Date().toISOString().slice(0, 10), sample: false,
       responses: qs.map(x => ({ questionId: x.id, selected: ans[x.id], isCorrect: ans[x.id] === x.answerKey })) }
-    addAttempt(a); nav('/student/results/' + aid)
+    const aid = await addAttempt(a); nav('/student/results/' + aid)
   }
   return <div className="card max-w-xl mx-auto space-y-4"><div className="h-2 bg-slate-100 rounded"><div className="h-2 bg-teal rounded" style={{ width: (i + 1) / qs.length * 100 + '%' }} /></div>
     <p className="text-sm text-slate-500">Soalan {i + 1} / {qs.length} • {skills.find(k => k.id === q.skillId)!.name}</p><h2 className="text-xl font-bold">{q.text}</h2>
