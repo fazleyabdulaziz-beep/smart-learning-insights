@@ -4,5 +4,12 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { Provider } from './store'
 import './index.css'
-ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><Provider><BrowserRouter><App /></BrowserRouter></Provider></React.StrictMode>)
-<BrowserRouter basename="/smart-learning-insights">
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Provider>
+      <BrowserRouter basename="/smart-learning-insights">
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
+)
