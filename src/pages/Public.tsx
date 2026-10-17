@@ -6,19 +6,21 @@ import { Role, users } from '../data/data'
 import { useApp } from '../store'
 
 export function Landing() {
-  const steps = ['Murid menjawab penilaian', 'Sistem merekod setiap jawapan', 'Analisis ikut kemahiran', 'Cadangan latihan berkaitan', 'Penilaian susulan & sejarah kemajuan']
+  const steps = [['📝', 'Murid menjawab penilaian', 'bg-teal-soft'], ['💾', 'Sistem merekod setiap jawapan', 'bg-violet-soft'], ['📊', 'Analisis ikut kemahiran', 'bg-pink-soft'], ['🎯', 'Cadangan latihan berkaitan', 'bg-amber-soft'], ['📈', 'Penilaian susulan & sejarah kemajuan', 'bg-teal-soft']]
   return <div className="space-y-10">
-    <section className="py-8"><h1 className="text-4xl md:text-5xl font-extrabold max-w-2xl leading-tight">{site.tagline}</h1>
-      <p className="mt-4 max-w-xl text-lg text-slate-600">Bantu ibu bapa dan guru melihat kemahiran Bahasa Melayu dan Matematik (Darjah 1–3) yang mungkin memerlukan latihan tambahan.</p>
-      <div className="mt-6 flex gap-3 flex-wrap"><Link to="/login" className="btn">Cuba demo</Link><a href="#cara" className="btn2">Cara ia berfungsi</a></div>
-      <p className="mt-4 text-sm text-slate-500">Platform ini bukan alat diagnosis kesukaran pembelajaran dan tidak meramal kecerdasan atau kerjaya.</p></section>
-    <section id="cara" className="card"><h2 className="text-xl font-extrabold mb-3">Cara analisis berfungsi</h2>
-      <ol className="grid md:grid-cols-5 gap-3">{steps.map((s, i) => <li key={s} className="bg-teal-soft rounded-xl p-3 text-sm"><b>{i + 1}.</b> {s}</li>)}</ol></section>
-    <section className="grid md:grid-cols-2 gap-4"><div className="card"><h3 className="font-bold">Untuk ibu bapa</h3><p className="text-slate-600 mt-1">Faham kemajuan anak ikut kemahiran, dengan bilangan soalan dipaparkan di sebelah setiap peratusan.</p></div>
-      <div className="card"><h3 className="font-bold">Untuk guru</h3><p className="text-slate-600 mt-1">Lihat kemahiran yang perlu perhatian merentas kelas dan buka laporan murid.</p></div></section>
+    <section className="card !p-8 md:!p-12 overflow-hidden relative"><div className="absolute -right-10 -top-10 w-56 h-56 rounded-full bg-pink-soft blur-2xl" /><div className="absolute right-24 bottom-0 w-40 h-40 rounded-full bg-violet-soft blur-2xl" />
+      <div className="relative"><span className="badge bg-teal-soft text-teal">Darjah 1–3 • Bahasa Melayu • Matematik</span>
+        <h1 className="mt-4 text-4xl md:text-6xl font-extrabold leading-tight max-w-3xl grad-text">{site.tagline}</h1>
+        <p className="mt-4 max-w-xl text-lg text-slate-600">Bantu ibu bapa dan guru melihat kemahiran yang mungkin memerlukan latihan tambahan, dengan cara yang jelas dan positif.</p>
+        <div className="mt-6 flex gap-3 flex-wrap"><Link to="/login" className="btn">Cuba demo 🚀</Link><a href="#cara" className="btn2">Cara ia berfungsi</a></div>
+        <p className="mt-4 text-sm text-slate-500">Bukan alat diagnosis kesukaran pembelajaran, dan tidak meramal kecerdasan atau kerjaya.</p></div></section>
+    <section id="cara"><h2 className="text-2xl font-extrabold mb-4">Cara analisis berfungsi</h2>
+      <ol className="grid md:grid-cols-5 gap-3">{steps.map(([e, s, c], i) => <li key={s} className={`${c} rounded-3xl p-4 text-sm font-semibold transition duration-300 hover:-translate-y-1 hover:shadow-lg`}><div className="text-3xl mb-2">{e}</div>{i + 1}. {s}</li>)}</ol></section>
+    <section className="grid md:grid-cols-2 gap-4"><div className="card"><h3 className="font-extrabold text-lg">👨‍👩‍👧 Untuk ibu bapa</h3><p className="text-slate-600 mt-1">Faham kemajuan anak ikut kemahiran, dengan bilangan soalan dipaparkan di sebelah setiap peratusan.</p></div>
+      <div className="card"><h3 className="font-extrabold text-lg">🍎 Untuk guru</h3><p className="text-slate-600 mt-1">Lihat kemahiran yang perlu perhatian merentas kelas dan buka laporan murid.</p></div></section>
     <section className="card"><h2 className="text-xl font-extrabold mb-2">Soalan lazim</h2>
       <p className="font-semibold">Adakah ini mendiagnosis murid?</p><p className="text-slate-600 mb-2">Tidak. Ia hanya meringkaskan jawapan pada sampel soalan.</p>
-      <p className="font-semibold">Adakah data ini sebenar?</p><p className="text-slate-600">Tidak. Semua rekod terlebih dahulu ialah data contoh fiksyen.</p></section></div>
+      <p className="font-semibold">Adakah data ini sebenar?</p><p className="text-slate-600">Tidak. Semua rekod ialah data contoh fiksyen.</p></section></div>
 }
 export function Login() {
   const { login, signIn, live } = useApp(); const nav = useNavigate()

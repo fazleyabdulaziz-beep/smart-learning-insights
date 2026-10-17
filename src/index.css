@@ -1,6 +1,20 @@
 @tailwind base;@tailwind components;@tailwind utilities;
-body{@apply bg-sand text-navy font-sans antialiased}
-.card{@apply bg-white rounded-2xl shadow-sm border border-slate-200/70 p-5}
-.btn{@apply inline-flex items-center justify-center gap-2 rounded-xl bg-teal text-white font-semibold px-4 py-2.5 hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy disabled:opacity-40}
-.btn2{@apply btn bg-white !text-navy border border-slate-300}
-.badge{@apply inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold}
+@layer base{
+  html{scroll-behavior:smooth}
+  body{@apply text-navy font-sans antialiased min-h-screen;
+    background:radial-gradient(900px 500px at 5% -5%,#bff0ec 0,transparent 60%),radial-gradient(800px 450px at 100% 0,#ffd9ec 0,transparent 55%),radial-gradient(900px 600px at 50% 110%,#e0d9ff 0,transparent 60%),#f8f7f3;background-attachment:fixed}
+}
+@layer components{
+  .card{@apply bg-white/90 backdrop-blur rounded-3xl border border-white shadow-lg shadow-slate-900/5 p-6 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl;animation:fadeUp .5s ease both}
+  .btn{@apply inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-teal to-sky-500 text-white font-bold px-5 py-2.5 shadow-md shadow-teal/30 transition duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet disabled:opacity-40 disabled:pointer-events-none}
+  .btn2{@apply inline-flex items-center justify-center gap-2 rounded-2xl bg-white text-navy font-bold px-5 py-2.5 border border-slate-200 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-violet-soft active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet disabled:opacity-40 disabled:pointer-events-none}
+  .badge{@apply inline-block rounded-full px-3 py-1 text-xs font-bold}
+  .grad-text{@apply bg-clip-text text-transparent bg-gradient-to-r from-teal via-violet to-pink}
+}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);background:rgba(255,255,255,.78)!important}
+input{transition:box-shadow .2s,border-color .2s}input:focus{outline:none;border-color:#7c5cff;box-shadow:0 0 0 3px #ece8ff}
+.bg-teal{background-image:linear-gradient(90deg,#0e9f9a,#38bdf8,#7c5cff)}
+.grid>.card:nth-child(4n+1){border-top:5px solid #0e9f9a}.grid>.card:nth-child(4n+2){border-top:5px solid #7c5cff}
+.grid>.card:nth-child(4n+3){border-top:5px solid #ff6fae}.grid>.card:nth-child(4n){border-top:5px solid #ffb020}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
